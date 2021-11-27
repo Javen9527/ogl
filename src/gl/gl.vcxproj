@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="shader\shader.cpp" />
     <ClCompile Include="shader\shader.h" />
   </ItemGroup>
   <ItemGroup>

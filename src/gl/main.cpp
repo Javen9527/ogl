@@ -1,5 +1,5 @@
 // Created by jianbo
-// Date: 2021.11.27
+// Date: 2021/11/27
 // All rights reserved
 
 #include <glad/glad.h>
@@ -36,7 +36,6 @@ namespace wind
 
 GLFWwindow *init(const std::string name, const unsigned int width, const unsigned int height)
 {
-    // glfw: initialize and configure
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -45,7 +44,6 @@ GLFWwindow *init(const std::string name, const unsigned int width, const unsigne
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    // glfw window creation
     GLFWwindow *window = glfwCreateWindow(width, height, "ogl", nullptr, nullptr);
     if (!window)
     {
@@ -54,8 +52,9 @@ GLFWwindow *init(const std::string name, const unsigned int width, const unsigne
         return nullptr;
     }
     glfwMakeContextCurrent(window);
-    // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    
+    // cursor
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // wind changes
     auto frameBufferCallback = [](GLFWwindow *window, int width, int height)
@@ -75,7 +74,8 @@ GLFWwindow *init(const std::string name, const unsigned int width, const unsigne
         }
 
         float xoffset = xpos - wind::lastX;
-        float yoffset = wind::lastY - ypos; // reversed since y-coordinates go from bottom to top
+        // reversed since y-coordinates go from bottom to top
+        float yoffset = wind::lastY - ypos; 
 
         wind::lastX = xpos;
         wind::lastY = ypos;
@@ -106,29 +106,25 @@ void render(GLFWwindow *window, Shader &pShader, Model &pModel)
     if (!window)
         return;
 
-    // configure global opengl state
     glEnable(GL_DEPTH_TEST);
 
-    // input
     auto processInput = [](GLFWwindow *window)
     {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            wind::camera.ProcessKeyboard(cam::FORWARD, wind::deltaTime);
+            wind::camera.ProcessKeyboard(cam::eFORWARD, wind::deltaTime);
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            wind::camera.ProcessKeyboard(cam::BACKWARD, wind::deltaTime);
+            wind::camera.ProcessKeyboard(cam::eBACKWARD, wind::deltaTime);
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            wind::camera.ProcessKeyboard(cam::LEFT, wind::deltaTime);
+            wind::camera.ProcessKeyboard(cam::eLEFT, wind::deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            wind::camera.ProcessKeyboard(cam::RIGHT, wind::deltaTime);
+            wind::camera.ProcessKeyboard(cam::eRIGHT, wind::deltaTime);
     };
 
-    // render loop
     while (!glfwWindowShouldClose(window))
     {
-        // per-frame time logic
         float currentFrame = glfwGetTime();
         wind::deltaTime = currentFrame - wind::lastFrame;
         wind::lastFrame = currentFrame;
@@ -136,11 +132,9 @@ void render(GLFWwindow *window, Shader &pShader, Model &pModel)
         // input
         processInput(window);
 
-        // render
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // don't forget to enable shader before setting uniforms
         pShader.use();
 
         {
@@ -162,7 +156,6 @@ void render(GLFWwindow *window, Shader &pShader, Model &pModel)
         // draw
         pModel.Draw(pShader);
 
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -170,24 +163,21 @@ void render(GLFWwindow *window, Shader &pShader, Model &pModel)
 
 void destroy(GLFWwindow *window)
 {
-    // glfw: terminate, clearing all previously allocated GLFW resources.
     if (window)
         glfwTerminate();
 }
 
 int main()
 {
-    // create context
     auto window = init("ogl", wind::SCR_WIDTH, wind::SCR_HEIGHT);
 
-    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
+    // flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(true);
 
     // build and compile shaders
     const std::string path = "d:/CODE/ogl/src/gl/resources/"; // current dir
-    Shader ourShader((path + "shader/vertex.vs").c_str(), (path + "shader/fragment.fs").c_str());
 
-    // load models
+    Shader ourShader((path + "shader/vertex.vs").c_str(), (path + "shader/fragment.fs").c_str());
     Model ourModel((path + "model/nanosuit/nanosuit.obj").c_str());
 
     // draw in wireframe

@@ -36,10 +36,10 @@ namespace cam
 // mouse direction
 enum Camera_Movement
 {
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT
+    eFORWARD,
+    eBACKWARD,
+    eLEFT,
+    eRIGHT
 };
 
 // Default camera values
@@ -123,16 +123,16 @@ inline void Camera::ProcessKeyboard (const Camera_Movement direction, const floa
     float velocity = m_movmentSpeed * deltaTime;
     switch (direction)
     {
-    case FORWARD:
+    case eFORWARD:
         m_position += m_front * velocity;
         break;
-    case BACKWARD:
+    case eBACKWARD:
         m_position -= m_front * velocity;
         break;
-    case LEFT:
+    case eLEFT:
         m_position -= m_right * velocity;
         break;
-    case RIGHT:
+    case eRIGHT:
         m_position += m_right * velocity;
         break;
     default:

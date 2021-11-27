@@ -24,6 +24,9 @@
     <ClCompile Include="shader\shader.h">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="shader\shader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\camera.h">
