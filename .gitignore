@@ -1,5 +1,6 @@
 bin/**
 !bin/readme.md
+!bin/assimp-vc142-mtd.dll
 
 tmp/**
 !tmp/readme.md

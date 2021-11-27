@@ -21,9 +21,18 @@
     <ClCompile Include="glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="shader\shader.h">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="model\mesh.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
