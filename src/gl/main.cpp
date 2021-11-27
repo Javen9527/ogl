@@ -9,7 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "shader/shader.h"
+#include "shaderManager/ShaderManager.h"
 #include "camera/camera.h"
 #include "model/model.h"
 
@@ -101,7 +101,7 @@ GLFWwindow *init(const std::string name, const unsigned int width, const unsigne
     return window;
 }
 
-void render(GLFWwindow *window, Shader &pShader, Model &pModel)
+void render(GLFWwindow *window, ShaderManager &pShader, Model &pModel)
 {
     if (!window)
         return;
@@ -177,7 +177,7 @@ int main()
     // build and compile shaders
     const std::string path = "d:/CODE/ogl/src/gl/resources/"; // current dir
 
-    Shader ourShader((path + "shader/vertex.vs").c_str(), (path + "shader/fragment.fs").c_str());
+    ShaderManager ourShader((path + "shader/vertex.vs").c_str(), (path + "shader/fragment.fs").c_str());
     Model ourModel((path + "model/nanosuit/nanosuit.obj").c_str());
 
     // draw in wireframe

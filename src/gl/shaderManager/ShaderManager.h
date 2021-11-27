@@ -11,7 +11,7 @@
 #include <sstream>
 #include <iostream>
 
-class Shader
+class ShaderManager
 {
 public:
     enum eShaderType
@@ -23,7 +23,7 @@ public:
     };
 
 public:
-    Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+    ShaderManager(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
     
     inline unsigned int getId() const {return m_id;}
     inline void use() { glUseProgram(m_id); }

@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "shader/shader.h"
+#include "shaderManager/ShaderManager.h"
 
 #include <string>
 #include <vector>
@@ -62,7 +62,7 @@ public:
     }
 
     // render the mesh
-    void Draw(Shader& shader)
+    void Draw(ShaderManager& shader)
     {
         // bind appropriate textures
         unsigned int diffuseNr = 1;
