@@ -16,21 +16,25 @@
 #include <iostream>
 #include <string>
 
-// settings
-const unsigned int SCR_WIDTH = 1600;
-const unsigned int SCR_HEIGHT = 1200;
+namespace wind
+{
+    // viewport
+    const unsigned int SCR_WIDTH = 1600;
+    const unsigned int SCR_HEIGHT = 1200;
 
-// camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
+    // camera
+    cam::Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    float lastX = SCR_WIDTH / 2.0f;
+    float lastY = SCR_HEIGHT / 2.0f;
+    bool firstMouse = true;
 
-// timing
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
+    // timing
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
 
-GLFWwindow* init(const std::string name, const unsigned int width, const unsigned int height)
+} // namespace master
+
+GLFWwindow *init(const std::string name, const unsigned int width, const unsigned int height)
 {
     // glfw: initialize and configure
     glfwInit();
@@ -42,7 +46,7 @@ GLFWwindow* init(const std::string name, const unsigned int width, const unsigne
 #endif
 
     // glfw window creation
-    GLFWwindow* window = glfwCreateWindow(width, height, "ogl", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(width, height, "ogl", nullptr, nullptr);
     if (!window)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -53,35 +57,37 @@ GLFWwindow* init(const std::string name, const unsigned int width, const unsigne
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    // set callbacks
-    auto frameBufferCallback = [](GLFWwindow* window, int width, int height)
+    // wind changes
+    auto frameBufferCallback = [](GLFWwindow *window, int width, int height)
     {
         glViewport(0, 0, width, height);
     };
     glfwSetFramebufferSizeCallback(window, frameBufferCallback);
 
-    auto mouseCallback = [](GLFWwindow* window, double xpos, double ypos)
+    // mouse move
+    auto mouseCallback = [](GLFWwindow *window, double xpos, double ypos)
     {
-        if (firstMouse)
+        if (wind::firstMouse)
         {
-            lastX = xpos;
-            lastY = ypos;
-            firstMouse = false;
+            wind::lastX = xpos;
+            wind::lastY = ypos;
+            wind::firstMouse = false;
         }
 
-        float xoffset = xpos - lastX;
-        float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+        float xoffset = xpos - wind::lastX;
+        float yoffset = wind::lastY - ypos; // reversed since y-coordinates go from bottom to top
 
-        lastX = xpos;
-        lastY = ypos;
+        wind::lastX = xpos;
+        wind::lastY = ypos;
 
-        camera.ProcessMouseMovement(xoffset, yoffset);
+        wind::camera.ProcessMouseMovement(xoffset, yoffset);
     };
     glfwSetCursorPosCallback(window, mouseCallback);
 
-    auto scrollCallback = [](GLFWwindow* window, double xoffset, double yoffset)
+    // scroll
+    auto scrollCallback = [](GLFWwindow *window, double xoffset, double yoffset)
     {
-        camera.ProcessMouseScroll(yoffset);
+        wind::camera.ProcessMouseScroll(yoffset);
     };
     glfwSetScrollCallback(window, scrollCallback);
 
@@ -95,25 +101,28 @@ GLFWwindow* init(const std::string name, const unsigned int width, const unsigne
     return window;
 }
 
-void render(GLFWwindow* window, Shader& pShader, Model& pModel)
+void render(GLFWwindow *window, Shader &pShader, Model &pModel)
 {
+    if (!window)
+        return;
+
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
 
     // input
-    auto processInput = [](GLFWwindow* window)
+    auto processInput = [](GLFWwindow *window)
     {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            camera.ProcessKeyboard(FORWARD, deltaTime);
+            wind::camera.ProcessKeyboard(cam::FORWARD, wind::deltaTime);
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            camera.ProcessKeyboard(BACKWARD, deltaTime);
+            wind::camera.ProcessKeyboard(cam::BACKWARD, wind::deltaTime);
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            camera.ProcessKeyboard(LEFT, deltaTime);
+            wind::camera.ProcessKeyboard(cam::LEFT, wind::deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            camera.ProcessKeyboard(RIGHT, deltaTime);
+            wind::camera.ProcessKeyboard(cam::RIGHT, wind::deltaTime);
     };
 
     // render loop
@@ -121,8 +130,8 @@ void render(GLFWwindow* window, Shader& pShader, Model& pModel)
     {
         // per-frame time logic
         float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        wind::deltaTime = currentFrame - wind::lastFrame;
+        wind::lastFrame = currentFrame;
 
         // input
         processInput(window);
@@ -134,19 +143,23 @@ void render(GLFWwindow* window, Shader& pShader, Model& pModel)
         // don't forget to enable shader before setting uniforms
         pShader.use();
 
-        // model
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -8.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-        pShader.setMat4("model", model);
+        {
+            // model
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(0.0f, -8.0f, 0.0f)); 
+            model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));      
+            pShader.setMat4("model", model);
 
-        // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-        pShader.setMat4("projection", projection);
-        pShader.setMat4("view", view);
-       
-       // draw
+            // view
+            glm::mat4 view = wind::camera.GetViewMatrix();
+            pShader.setMat4("view", view);
+
+            //projection transformations
+            glm::mat4 projection = glm::perspective(glm::radians(wind::camera.GetZoomLevel()), (float)wind::SCR_WIDTH / (float)wind::SCR_HEIGHT, 0.1f, 100.0f);
+            pShader.setMat4("projection", projection);
+        }
+
+        // draw
         pModel.Draw(pShader);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -155,31 +168,32 @@ void render(GLFWwindow* window, Shader& pShader, Model& pModel)
     }
 }
 
-void destroy()
+void destroy(GLFWwindow *window)
 {
     // glfw: terminate, clearing all previously allocated GLFW resources.
-    glfwTerminate();
+    if (window)
+        glfwTerminate();
 }
 
 int main()
 {
     // create context
-    auto window = init("ogl", SCR_WIDTH, SCR_HEIGHT);
+    auto window = init("ogl", wind::SCR_WIDTH, wind::SCR_HEIGHT);
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(true);
 
     // build and compile shaders
     const std::string path = "d:/CODE/ogl/src/gl/resources/"; // current dir
-    Shader ourShader((path +"shader/vertex.vs").c_str(), (path + "shader/fragment.fs").c_str());
+    Shader ourShader((path + "shader/vertex.vs").c_str(), (path + "shader/fragment.fs").c_str());
 
     // load models
-    Model ourModel((path +"model/nanosuit/nanosuit.obj").c_str());
+    Model ourModel((path + "model/nanosuit/nanosuit.obj").c_str());
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     render(window, ourShader, ourModel);
 
-    destroy();
+    destroy(window);
     return 0;
 }
