@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <shader/shader.h>
+#include "shader/shader.h"
 
 #include <string>
 #include <vector>
@@ -16,7 +16,8 @@ using namespace std;
 
 #define MAX_BONE_INFLUENCE 4
 
-struct Vertex {
+struct Vertex 
+{
     // position
     glm::vec3 Position;
     // normal
@@ -33,13 +34,15 @@ struct Vertex {
     float m_Weights[MAX_BONE_INFLUENCE];
 };
 
-struct Texture {
+struct Texture 
+{
     unsigned int id;
     string type;
     string path;
 };
 
-class Mesh {
+class Mesh 
+{
 public:
     // mesh Data
     vector<Vertex>       vertices;
