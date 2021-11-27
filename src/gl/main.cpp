@@ -171,9 +171,6 @@ int main()
 {
     auto window = init("ogl", wind::SCR_WIDTH, wind::SCR_HEIGHT);
 
-    // flip loaded texture's on the y-axis (before loading model).
-    stbi_set_flip_vertically_on_load(true);
-
     // build and compile shaders
     const std::string path = "d:/CODE/ogl/src/gl/resources/"; // current dir
 
