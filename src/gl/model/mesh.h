@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <glad/glad.h> // holds all OpenGL type declarations
+#include <glad/glad.h> 
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -12,6 +12,9 @@
 
 #include <string>
 #include <vector>
+
+namespace model
+{
 
 #define MAX_BONE_INFLUENCE 4
 
@@ -148,3 +151,5 @@ void Mesh::setupMesh()
 
     glBindVertexArray(0);
 }
+
+} // namespace model

@@ -26,6 +26,9 @@
 #include <map>
 #include <vector>
 
+namespace model
+{
+
 class TextureLoader
 {
 public:
@@ -262,3 +265,5 @@ unsigned int TextureLoader::loadTexture(const char* name, const std::string& dir
 
     return textureID;
 }
+
+} // namespace model

@@ -101,7 +101,7 @@ GLFWwindow *init(const std::string name, const unsigned int width, const unsigne
     return window;
 }
 
-void render(GLFWwindow *window, ShaderManager &pShader, Model &pModel)
+void render(GLFWwindow *window, ShaderManager &pShader, model::Model &pModel)
 {
     if (!window)
         return;
@@ -175,7 +175,7 @@ int main()
     const std::string path = "d:/CODE/ogl/src/gl/resources/"; // current dir
 
     ShaderManager ourShader((path + "shader/vertex.vs").c_str(), (path + "shader/fragment.fs").c_str());
-    Model ourModel((path + "model/nanosuit/nanosuit.obj").c_str());
+    model::Model ourModel((path + "model/nanosuit/nanosuit.obj").c_str());
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
